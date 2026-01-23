@@ -1,6 +1,7 @@
 import { text } from "express";
 import Mailgen from "mailgen";
 import nodemailer from "nodemailer";
+import ApiError from "./api-error.js";
 
 const sendEmail = async (options) => {
   const mailGenerator = new Mailgen({
@@ -34,9 +35,9 @@ const sendEmail = async (options) => {
   try {
     await transporter.sendMail(mail);
   } catch (error) {
-    console.error(
-      "Email service failed Make sure credentials are correct ",
-      error,
+    throw new ApiError(
+      407,
+      `Email service failed Make sure credentials are correct ${error}`,
     );
   }
 };
