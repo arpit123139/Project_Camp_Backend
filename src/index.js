@@ -2,6 +2,7 @@ import dotenv from "dotenv";
 import app from "./app.js";
 import connectDB from "./db/index.js";
 
+//process.env is global in Node.js so thats the reason loading it once will work everywhere
 dotenv.config({
   path: "./.env",
 });

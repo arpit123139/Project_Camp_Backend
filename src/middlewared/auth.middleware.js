@@ -2,6 +2,8 @@ import ApiError from "../utils/api-error.js";
 import User from "../models/user.models.js";
 import asyncHandler from "../utils/async-handler.js";
 import jwt from "jsonwebtoken";
+import { ProjectMember } from "../models/projectmember.models.js";
+import mongoose from "mongoose";
 
 export const verifyJwt = async (req, res, next) => {
   const token =
@@ -32,4 +34,33 @@ export const verifyJwt = async (req, res, next) => {
   } catch (error) {
     throw new ApiError(401, "Invalid Access token");
   }
+};
+
+export const validateProjectPermission = (roles = []) => {
+  return async (req, res, next) => {
+    const { projectId } = req.params;
+
+    if (!projectId) throw new ApiError(400, "ProjectId is missing");
+
+    const project = await ProjectMember.findOne({
+      project: new mongoose.Types.ObjectId(projectId),
+      user: new mongoose.Types.ObjectId(req.user._id),
+    });
+
+    if (!project)
+      throw new ApiError(
+        400,
+        "Project is missing or the User is not Associated to the Project and not Authorized to perform any opetaion on the Project ",
+      );
+
+    const givenRole = project.role;
+
+    if (!roles.includes(givenRole))
+      throw new ApiError(
+        403,
+        "User is not authorized to perform the Operation",
+      );
+
+    next();
+  };
 };

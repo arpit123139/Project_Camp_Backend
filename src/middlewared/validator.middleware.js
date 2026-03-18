@@ -9,6 +9,18 @@ export const validate = (req, res, next) => {
   const extractedErrors = [];
 
   erros.array().map((err) => extractedErrors.push({ [err.path]: err.msg }));
+  console.log(erros.array());
+  /*
+[
+  {
+    type: 'field',
+    value: 'one$one.com',
+    msg: 'Email is invalid',
+    path: 'email',
+    location: 'body'
+  }
+]
+*/
   console.error(extractedErrors);
 
   throw new ApiError(422, "Recieved Data is not valid", extractedErrors);

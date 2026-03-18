@@ -1,6 +1,7 @@
 import mongoose, { Schema } from "mongoose";
 import { AvailableUserRole, UserRolesEnum } from "../utils/constants.js";
 
+//The enum property restricts the field to a fixed set of allowed values.
 const projectMemberSchema = new Schema(
   {
     user: {
@@ -20,7 +21,7 @@ const projectMemberSchema = new Schema(
   { timestamps: true },
 );
 
-export const ProjectMember = mongoose.Schema(
+export const ProjectMember = mongoose.model(
   "ProjectMember",
   projectMemberSchema,
 );
